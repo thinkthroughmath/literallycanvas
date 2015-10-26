@@ -88,6 +88,9 @@ init = (el, opts = {}) ->
 
   opts.snapshot ?= null
 
+  opts.showPickerElement ?= false
+  opts.optionsElement ?= false
+
   unless 'tools' of opts
     opts.tools = defaultTools
 
@@ -118,9 +121,9 @@ init = (el, opts = {}) ->
   optionsElement = document.createElement('div')
   optionsElement.className = 'lc-options horz-toolbar'
 
-  el.appendChild(pickerElement)
+  el.appendChild(pickerElement) if opts.showPickerElement
   el.appendChild(drawingViewElement)
-  el.appendChild(optionsElement)
+  el.appendChild(optionsElement) if opts.showOptionsElement
 
   ### and get to work ###
 
