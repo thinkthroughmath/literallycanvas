@@ -3148,13 +3148,13 @@ module.exports = Picker;
 
 
 },{"../core/localization":8,"./ClearButton":20,"./ColorWell":21,"./React-shim":24,"./UndoRedoButtons":26,"./ZoomButtons":27}],24:[function(_dereq_,module,exports){
-var React;
+// var React;
 
-try {
-  React = _dereq_('React/addons');
-} catch (_error) {
-  React;
-}
+// try {
+//   React = _dereq_('React/addons');
+// } catch (_error) {
+//   React;
+// }
 
 if ((React != null ? React.addons : void 0) == null) {
   throw "Can't find React (you need the version with addons)";
