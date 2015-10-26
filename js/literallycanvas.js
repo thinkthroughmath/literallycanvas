@@ -3153,7 +3153,7 @@ var React;
 try {
   React = _dereq_('React/addons');
 } catch (_error) {
-  React = window.React;
+  React;
 }
 
 if ((React != null ? React.addons : void 0) == null) {
