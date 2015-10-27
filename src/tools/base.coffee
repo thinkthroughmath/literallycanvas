@@ -19,17 +19,12 @@ tools.Tool = class Tool
   # called when the user finishes dragging
   end: (x, y, lc) ->
 
-  # kind of options GUI to display
-  optionsStyle: null
-
   didBecomeActive: (lc) ->
   willBecomeInactive: (lc) ->
-
 
 tools.ToolWithStroke = class ToolWithStroke extends Tool
 
   constructor: (lc) -> @strokeWidth = lc.opts.defaultStrokeWidth
-  optionsStyle: 'stroke-width'
 
 
 module.exports = tools

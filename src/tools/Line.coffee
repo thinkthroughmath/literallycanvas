@@ -8,7 +8,6 @@ module.exports = class Line extends Tool
   iconName: 'line'
 
   constructor: -> @strokeWidth = 5
-  optionsStyle: 'line-options-and-stroke-width'
 
   begin: (x, y, lc) ->
     @currentShape = createShape('Line', {

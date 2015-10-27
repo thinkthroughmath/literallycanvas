@@ -269,5 +269,3 @@ module.exports = class Text extends Tool
     @inputEl.style.MozTransform= transformString
     @inputEl.style.msTransform= transformString
     @inputEl.style.OTransform= transformString
-
-  optionsStyle: 'font'
