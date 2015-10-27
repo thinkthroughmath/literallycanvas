@@ -20,8 +20,6 @@ gulp.task('browserify', function() {
   var bundleStream = browserify({
       basedir: 'src', extensions: ['.js', '.coffee'], debug: true
   }).add('./index.coffee')
-    .external('React/addons')
-    .external('React')
     .transform('coffeeify')
     .bundle({standalone: 'LC'})
     .on('error', function (err) {
