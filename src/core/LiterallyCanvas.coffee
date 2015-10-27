@@ -120,8 +120,13 @@ module.exports = class LiterallyCanvas
   setTool: (tool) ->
     @tool.willBecomeInactive(this)
     @tool = tool
+    @tool.strokeWidth = @strokeWidth
     @trigger('toolChange', {tool})
     tool.didBecomeActive(this)
+
+  setStrokeWidth: (strokeWidth) ->
+    @strokeWidth = strokeWidth
+    @tool.strokeWidth = strokeWidth
 
   setShapesInProgress: (newVal) -> @_shapesInProgress = newVal
 
