@@ -19,17 +19,23 @@ tools.Tool = class Tool
   # called when the user finishes dragging
   end: (x, y, lc) ->
 
-  # kind of options GUI to display
-  optionsStyle: null
-
   didBecomeActive: (lc) ->
   willBecomeInactive: (lc) ->
 
-
 tools.ToolWithStroke = class ToolWithStroke extends Tool
 
-  constructor: (lc) -> @strokeWidth = lc.opts.defaultStrokeWidth
-  optionsStyle: 'stroke-width'
+  constructor: (lc) -> @strokeWidth ?= lc.opts.defaultStrokeWidth
 
+  didBecomeActive: (lc) ->
+    unsubscribeFuncs = []
+    @unsubscribe = =>
+      for func in unsubscribeFuncs
+        func()
+
+    unsubscribeFuncs.push lc.on 'setStrokeWidth', (strokeWidth) =>
+      @strokeWidth = strokeWidth
+
+  willBecomeInactive: (lc) ->
+    @unsubscribe()
 
 module.exports = tools
