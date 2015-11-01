@@ -8,9 +8,10 @@ module.exports = class Pencil extends ToolWithStroke
   usesSimpleAPI: false
 
   didBecomeActive: (lc) ->
-    unsubscribeFuncs = []
-    @unsubscribe = =>
-      for func in unsubscribeFuncs
+    super(lc)
+    polygonUnsubscribeFuncs = []
+    @polygonUnsubscribe = =>
+      for func in polygonUnsubscribeFuncs
         func()
 
     @points = null
@@ -41,15 +42,16 @@ module.exports = class Pencil extends ToolWithStroke
       lc.setShapesInProgress(@_getShapes(lc))
       lc.repaintLayer('main')
 
-    unsubscribeFuncs.push lc.on 'drawingChange', => @_cancel(lc)
-    unsubscribeFuncs.push lc.on 'lc-pointerdown', onDown
-    unsubscribeFuncs.push lc.on 'lc-pointerdrag', onMove
-    unsubscribeFuncs.push lc.on 'lc-pointermove', onMove
-    unsubscribeFuncs.push lc.on 'lc-pointerup', onUp
+    polygonUnsubscribeFuncs.push lc.on 'drawingChange', => @_cancel(lc)
+    polygonUnsubscribeFuncs.push lc.on 'lc-pointerdown', onDown
+    polygonUnsubscribeFuncs.push lc.on 'lc-pointerdrag', onMove
+    polygonUnsubscribeFuncs.push lc.on 'lc-pointermove', onMove
+    polygonUnsubscribeFuncs.push lc.on 'lc-pointerup', onUp
 
   willBecomeInactive: (lc) ->
+    super(lc)
     @_cancel(lc) if @points or @maybePoint
-    @unsubscribe()
+    @polygonUnsubscribe()
 
   _getArePointsClose: (a, b) ->
     return (Math.abs(a.x - b.x) + Math.abs(a.y - b.y)) < 10
