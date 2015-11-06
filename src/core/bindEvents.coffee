@@ -51,6 +51,33 @@ module.exports = bindEvents = (lc, canvas, panWithKeyboard = false) ->
     document.addEventListener 'mousemove', mouseMoveListener
     document.addEventListener 'mouseup', mouseUpListener
 
+  canvas.addEventListener 'dragover', (e) =>
+    e.preventDefault()
+    e.stopPropagation()
+    console.log 'heard over'
+
+  canvas.addEventListener 'drop', (e) =>
+    e.preventDefault()
+    e.stopPropagation()
+    console.log  'heard drop'
+    files = e.dataTransfer.files
+    console.log files
+
+    fr = new FileReader()
+    dragImg = new Image()
+
+    fr.onloadend = ->
+      dragImg.src = fr.result
+
+    fr.readAsDataURL(files[0])
+
+    p = position(canvas, e)
+    pt = lc.clientCoordsToDrawingCoords(p.left, p.top)
+
+    newShape = LC.createShape('Image',
+      {image: dragImg, x: pt.x, y: pt.y})
+    lc.saveShape newShape
+
 
   touchMoveListener = (e) ->
     e.preventDefault()
