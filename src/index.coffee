@@ -168,9 +168,11 @@ registerJQueryPlugin = (_$) ->
 
 
 # non-browserify compatibility
-window.LC = {init}
-if window.$
-    registerJQueryPlugin(window.$)
+  # @ifdef INCLUDE_GUI
+  window.LC = {init}
+  if window.$
+      registerJQueryPlugin(window.$)
+  # @endif
 
 
 module.exports = {
