@@ -141,7 +141,7 @@
 
         lc = LC.init(containerOne, {
           toolbarPosition: 'bottom',
-          tools: LC.defaultTools.concat([MyTool]),
+          tools: LC.defaultTools.concat([LC.tools.Picker]),
           snapshot: JSON.parse(localStorage.getItem('drawing')),
           defaultStrokeWidth: 2,
           strokeWidths: [1, 2, 3, 5, 30],
