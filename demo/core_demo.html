@@ -99,6 +99,7 @@
         <a href="javascript:void(0);" class='tool' id="tool-dashed">Dashed Line</a>
         <a href="javascript:void(0);" class='tool' id="tool-ellipse">Ellipse</a>
         <a href="javascript:void(0);" class='tool' id="tool-rectangle">Rectangle</a>
+        <a href="javascript:void(0);" class='tool' id="tool-picker">Select</a>
       </div>
 
 <!-- SIZES WON'T WORK UNTIL SIZE EVENT PR IS MERGED! -->
@@ -246,6 +247,10 @@
             name: 'tool-rectangle',
             el: document.getElementById('tool-rectangle'),
             tool: new LC.tools.Rectangle(lc)
+          },{
+            name: 'tool-picker',
+            el: document.getElementById('tool-picker'),
+            tool: new LC.tools.Picker(lc)
           }
         ];
 
