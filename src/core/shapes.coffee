@@ -24,7 +24,7 @@ defineShape = (name, props) ->
       legacyDrawFunc.call(shape, ctx, retryCallback)
     drawLatestFunc = (ctx, bufferCtx, shape, retryCallback) ->
       legacyDrawLatestFunc.call(shape, ctx, bufferCtx, retryCallback)
-    delete props.draw 
+    delete props.draw
     delete props.drawLatest if props.drawLatest
 
     defineCanvasRenderer(name, drawFunc, drawLatestFunc)
@@ -132,7 +132,16 @@ defineShape 'Image',
       img = new Image()
       img.src = data.imageSrc
     createShape('Image', {x: data.x, y: data.y, image: img, scale: data.scale})
-
+  createWithColor: (newColor) ->
+    rec = @getBoundingRect()
+    createShape 'Rectangle',
+      x: rec.x
+      y: rec.y
+      width: rec.width
+      height: rec.height
+      strokeWidth: rec.strokeWidth
+      strokeColor: newColor
+      fillColor: newColor
 
 defineShape 'Rectangle',
   constructor: (args={}) ->
@@ -152,6 +161,15 @@ defineShape 'Rectangle',
   }
   toJSON: -> {@x, @y, @width, @height, @strokeWidth, @strokeColor, @fillColor}
   fromJSON: (data) -> createShape('Rectangle', data)
+  createWithColor: (newColor) ->
+    createShape 'Rectangle',
+      x: @x
+      y: @y
+      width: @width
+      height: @height
+      strokeWidth: @strokeWidth
+      strokeColor: newColor
+      fillColor: newColor
 
 
 # this is pretty similar to the Rectangle shape. maybe consolidate somehow.
@@ -173,6 +191,16 @@ defineShape 'Ellipse',
   }
   toJSON: -> {@x, @y, @width, @height, @strokeWidth, @strokeColor, @fillColor}
   fromJSON: (data) -> createShape('Ellipse', data)
+
+  createWithColor: (newColor) ->
+    createShape 'Ellipse',
+      x: @x
+      y: @y
+      width: @width
+      height: @height
+      strokeWidth: @strokeWidth
+      strokeColor: newColor
+      fillColor: newColor
 
 
 defineShape 'Line',
@@ -196,7 +224,17 @@ defineShape 'Line',
   toJSON: ->
     {@x1, @y1, @x2, @y2, @strokeWidth, @color, @capStyle, @dash, @endCapShapes}
   fromJSON: (data) -> createShape('Line', data)
-
+  createWithColor: (newColor) ->
+    createShape 'Line',
+      x1: @x1
+      y1: @y1
+      x2: @x2
+      y2: @y2
+      strokeWidth: @strokeWidth
+      color: newColor
+      capStyle: 'round'
+      dash: null
+      endCapShapes: [null, null]
 
 # returns false if no points because there are no points to share style
 _doAllPointsShareStyle = (points) ->
@@ -306,6 +344,16 @@ linePathFuncs =
         0, @smoothedPoints.length - @segmentSize * (@tailSize - 1)
       ).concat(@tail)
 
+  createWithColor: (newColor) ->
+    _createLinePathFromData 'LinePath',
+      {
+        @order, @tailSize, @smooth,
+        pointCoordinatePairs: ([point.x, point.y] for point in @points),
+        smoothedPointCoordinatePairs: (
+          [point.x, point.y] for point in @smoothedPoints),
+        pointSize: @points[0].size,
+        pointColor: newColor
+      }
 
 LinePath = defineShape 'LinePath', linePathFuncs
 
@@ -330,6 +378,12 @@ defineShape 'Point',
     {x: @x - @size / 2, y: @y - @size / 2, width: @size, height: @size}
   toJSON: -> {@x, @y, @size, @color}
   fromJSON: (data) -> createShape('Point', data)
+  createWithColor: (newColor) ->
+    createShape 'Point',
+      x: @x
+      y: @y
+      size: @size
+      color: newColor
 
 
 defineShape 'Polygon',
@@ -365,6 +419,14 @@ defineShape 'Polygon',
         x, y, size: data.strokeWidth, color: data.strokeColor
       })
     createShape('Polygon', data)
+  createWithColor: (newColor) ->
+    createShape 'Polygon',
+      points: @points
+      fillColor: newColor
+      strokeColor: newColor
+      strokeWidth: @strokeWidth
+      dash = @dash
+      isClosed = @isClosed
 
 
 defineShape 'Text',
