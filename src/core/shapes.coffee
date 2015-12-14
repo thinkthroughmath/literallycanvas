@@ -496,7 +496,16 @@ defineShape 'Text',
     }
   toJSON: -> {@x, @y, @text, @color, @font, @forcedWidth, @forcedHeight, @v}
   fromJSON: (data) -> createShape('Text', data)
-
+  createWithColor: (newColor) ->
+    rec = @getBoundingRect()
+    createShape 'Rectangle',
+      x: rec.x
+      y: rec.y
+      width: rec.width
+      height: rec.height
+      strokeWidth: rec.strokeWidth
+      strokeColor: newColor
+      fillColor: newColor
 
 defineShape 'SelectionBox',
   constructor: (args={}) ->
