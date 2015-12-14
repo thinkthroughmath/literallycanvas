@@ -386,9 +386,9 @@ module.exports = class LiterallyCanvas
   canUndo: -> !!@undoStack.length
   canRedo: -> !!@redoStack.length
 
-  getPixel: (x, y) ->
+  getPixel: (x, y, ctx = @ctx) ->
     p = @drawingCoordsToClientCoords x, y
-    pixel = @ctx.getImageData(p.x, p.y, 1, 1).data
+    pixel = ctx.getImageData(p.x, p.y, 1, 1).data
     if pixel[3]
       "rgb(#{pixel[0]}, #{pixel[1]}, #{pixel[2]})"
     else
