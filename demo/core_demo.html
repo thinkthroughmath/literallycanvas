@@ -99,6 +99,7 @@
         <a href="javascript:void(0);" class='tool' id="tool-ellipse">Ellipse</a>
         <a href="javascript:void(0);" class='tool' id="tool-rectangle">Rectangle</a>
         <a href="javascript:void(0);" class='tool' id="tool-polygon">Polygon</a>
+        <a href="javascript:void(0);" class='tool' id="tool-picker">Select</a>
       </div>
 
 <!-- SIZES WON'T WORK UNTIL SIZE EVENT PR IS MERGED! -->
@@ -249,6 +250,10 @@
             name: 'tool-polygon',
             el: document.getElementById('tool-polygon'),
             tool: new LC.tools.Polygon(lc)
+          },{
+            name: 'tool-picker',
+            el: document.getElementById('tool-picker'),
+            tool: new LC.tools.Picker(lc)
           }
         ];
 
