@@ -40,6 +40,7 @@ tools =
   Polygon: require './tools/Polygon'
   Pan: require './tools/Pan'
   Eyedropper: require './tools/Eyedropper'
+  Picker: require './tools/Picker'
 
   Tool: baseTools.Tool
   ToolWithStroke: baseTools.ToolWithStroke
