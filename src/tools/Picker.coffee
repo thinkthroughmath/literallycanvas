@@ -19,8 +19,6 @@ module.exports = class Picker extends Tool
     @picker = document.createElement('canvas')
     @picker.style['background-color'] = 'transparent'
     @pickerCtx = @picker.getContext('2d')
-    # lc.containerEl.appendChild(@picker) # for peeking at it
-    # console.log 'new picker tool'
 
   didBecomeActive: (lc) ->
     pickerUnsubscribeFuncs = []
@@ -28,9 +26,7 @@ module.exports = class Picker extends Tool
       for func in pickerUnsubscribeFuncs
         func()
 
-    console.log 'did become active'
     @_drawPickerCanvas lc, lc.shapes.map (shape, index) =>
-      console.log "shape:", index, @_intToHex(index)
       shape.createWithColor?("##{@_intToHex(index)}") || shape
 
     @isDragging = false
@@ -40,14 +36,12 @@ module.exports = class Picker extends Tool
     onDown = ({x, y}) =>
       # @currentShape = null
       shapeIndex = @_getPixel(x, y, lc, @pickerCtx)
-      console.log 'selected:',shapeIndex
       @currentShape = lc.shapes[shapeIndex]
       if @currentShape?
         @initialShapeBoundingRect = @currentShape.getBoundingRect(lc.ctx)
         point = {x, y}
 
         if getIsPointInBox(point, @initialShapeBoundingRect)
-          console.log 'point in box!'
           @isDragging = true
 
           @dragOffset = {
@@ -102,7 +96,6 @@ module.exports = class Picker extends Tool
         # lc.saveShape(@currentShape) if @currentShape && @didDrag
         lc.repaintLayer('main')
         @_drawPickerCanvas lc, lc.shapes.map (shape, index) =>
-          console.log "shape:", index, @_intToHex(index)
           shape.createWithColor?("##{@_intToHex(index)}") || shape
 
     pickerUnsubscribeFuncs.push lc.on 'lc-pointerdown', onDown
@@ -122,7 +115,6 @@ module.exports = class Picker extends Tool
     lc.repaintLayer('main')
 
   _drawPickerCanvas: (lc, shapes) ->
-    console.log shapes
     @picker.width = lc.canvas.width
     @picker.height = lc.canvas.height
     @pickerCtx.clearRect(0, 0, @picker.width, @picker.height)
