@@ -34,7 +34,6 @@ module.exports = class Picker extends Tool
     @didDrag = false
 
     onDown = ({x, y}) =>
-      # @currentShape = null
       shapeIndex = @_getPixel(x, y, lc, @pickerCtx)
       @currentShape = lc.shapes[shapeIndex]
       if @currentShape?
@@ -95,7 +94,7 @@ module.exports = class Picker extends Tool
     onUp = ({x, y}) =>
       if @isDragging
         @isDragging = false
-        # lc.saveShape(@currentShape) if @currentShape && @didDrag
+        lc.trigger('lc-shape-moved', {shape: @currentShape}) if @didDrag
         lc.repaintLayer('main')
         @_drawPickerCanvas lc, lc.shapes.map (shape, index) =>
           shape.createWithColor?("##{@_intToHex(index)}") || shape
