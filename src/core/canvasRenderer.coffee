@@ -75,10 +75,11 @@ defineCanvasRenderer 'SelectionBox', do ->
     ctx.strokeRect(x, y, handleSize, handleSize)
 
   (ctx, shape) ->
-    _drawHandle(ctx, shape.getTopLeftHandleRect(), shape.handleSize)
-    _drawHandle(ctx, shape.getTopRightHandleRect(), shape.handleSize)
-    _drawHandle(ctx, shape.getBottomLeftHandleRect(), shape.handleSize)
-    _drawHandle(ctx, shape.getBottomRightHandleRect(), shape.handleSize)
+    if shape.drawHandles
+      _drawHandle(ctx, shape.getTopLeftHandleRect(), shape.handleSize)
+      _drawHandle(ctx, shape.getTopRightHandleRect(), shape.handleSize)
+      _drawHandle(ctx, shape.getBottomLeftHandleRect(), shape.handleSize)
+      _drawHandle(ctx, shape.getBottomRightHandleRect(), shape.handleSize)
 
     if shape.backgroundColor
       ctx.fillStyle = shape.backgroundColor
