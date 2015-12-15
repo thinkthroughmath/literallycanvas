@@ -34,7 +34,6 @@ module.exports = class Picker extends Tool
     @didDrag = false
 
     onDown = ({x, y}) =>
-      # @currentShape = null
       shapeIndex = @_getPixel(x, y, lc, @pickerCtx)
       @currentShape = lc.shapes[shapeIndex]
       if @currentShape?
