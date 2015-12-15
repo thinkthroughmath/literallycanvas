@@ -38,6 +38,8 @@ module.exports = class Picker extends Tool
       shapeIndex = @_getPixel(x, y, lc, @pickerCtx)
       @currentShape = lc.shapes[shapeIndex]
       if @currentShape?
+        lc.trigger 'lc-shape-selected', @currentShape.toJSON()
+
         @initialShapeBoundingRect = @currentShape.getBoundingRect(lc.ctx)
         point = {x, y}
 
