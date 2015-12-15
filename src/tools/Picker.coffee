@@ -144,4 +144,4 @@ module.exports = class Picker extends Tool
       null
 
   _getSelectionShape: (ctx, backgroundColor=null) ->
-    createShape('SelectionBox', {shape: @currentShape, ctx, backgroundColor})
+    createShape('SelectionBox', {shape: @currentShape, ctx, backgroundColor, drawHandles: false})

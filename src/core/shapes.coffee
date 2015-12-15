@@ -514,6 +514,7 @@ defineShape 'SelectionBox',
     @margin = 4
     @backgroundColor = args.backgroundColor or null
     @_br = @shape.getBoundingRect(args.ctx)
+    @drawHandles = if args.drawHandles? then args.drawHandles else true
 
   toJSON: -> {shape: shapeToJSON(@shape), @backgroundColor}
   fromJSON: ({shape, handleSize, margin, backgroundColor}) ->
