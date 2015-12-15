@@ -94,7 +94,7 @@ module.exports = class Picker extends Tool
     onUp = ({x, y}) =>
       if @isDragging
         @isDragging = false
-        lc.trigger('lc-shape-moved', {shape: @currentShape}) if @didDrag
+        lc.trigger('lc-shape-moved', shapeToJSON(@currentShape)) if @didDrag
         lc.repaintLayer('main')
         @_drawPickerCanvas lc, lc.shapes.map (shape, index) =>
           shape.createWithColor?("##{@_intToHex(index)}") || shape
