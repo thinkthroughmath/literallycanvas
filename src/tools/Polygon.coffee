@@ -1,16 +1,17 @@
 {ToolWithStroke} = require './base'
 {createShape} = require '../core/shapes'
 
-module.exports = class Pencil extends ToolWithStroke
+module.exports = class Polygon extends ToolWithStroke
 
   name: 'Polygon'
   iconName: 'polygon'
   usesSimpleAPI: false
 
   didBecomeActive: (lc) ->
-    unsubscribeFuncs = []
-    @unsubscribe = =>
-      for func in unsubscribeFuncs
+    super(lc)
+    polygonUnsubscribeFuncs = []
+    @polygonUnsubscribe = =>
+      for func in polygonUnsubscribeFuncs
         func()
 
     @points = null
@@ -18,7 +19,7 @@ module.exports = class Pencil extends ToolWithStroke
 
     onUp = =>
       return @_close(lc) if @_getWillFinish()
-      @_ensureFinishButtonsExist(lc) unless @points
+      lc.trigger 'lc-polygon-started'
 
       if @points
         @points.push(@maybePoint)
@@ -41,15 +42,31 @@ module.exports = class Pencil extends ToolWithStroke
       lc.setShapesInProgress(@_getShapes(lc))
       lc.repaintLayer('main')
 
-    unsubscribeFuncs.push lc.on 'drawingChange', => @_cancel(lc)
-    unsubscribeFuncs.push lc.on 'lc-pointerdown', onDown
-    unsubscribeFuncs.push lc.on 'lc-pointerdrag', onMove
-    unsubscribeFuncs.push lc.on 'lc-pointermove', onMove
-    unsubscribeFuncs.push lc.on 'lc-pointerup', onUp
+    polygonFinishOpen = () =>
+      @maybePoint = {x: Infinity, y: Infinity}
+      @_close(lc)
+
+    polygonFinishClosed = () =>
+      @maybePoint = @points[0]
+      @_close(lc)
+
+    polygonCancel = () =>
+      @_cancel(lc)
+
+    polygonUnsubscribeFuncs.push lc.on 'drawingChange', => @_cancel(lc)
+    polygonUnsubscribeFuncs.push lc.on 'lc-pointerdown', onDown
+    polygonUnsubscribeFuncs.push lc.on 'lc-pointerdrag', onMove
+    polygonUnsubscribeFuncs.push lc.on 'lc-pointermove', onMove
+    polygonUnsubscribeFuncs.push lc.on 'lc-pointerup', onUp
+
+    polygonUnsubscribeFuncs.push lc.on 'lc-polygon-finishopen', polygonFinishOpen
+    polygonUnsubscribeFuncs.push lc.on 'lc-polygon-finishclosed', polygonFinishClosed
+    polygonUnsubscribeFuncs.push lc.on 'lc-polygon-cancel', polygonCancel
 
   willBecomeInactive: (lc) ->
+    super(lc)
     @_cancel(lc) if @points or @maybePoint
-    @unsubscribe()
+    @polygonUnsubscribe()
 
   _getArePointsClose: (a, b) ->
     return (Math.abs(a.x - b.x) + Math.abs(a.y - b.y)) < 10
@@ -67,14 +84,14 @@ module.exports = class Pencil extends ToolWithStroke
       @_getArePointsClose(@points[@points.length - 1], @maybePoint))
 
   _cancel: (lc) ->
-    @_ensureFinishButtonsDontExist(lc)
+    lc.trigger 'lc-polygon-stopped'
     @maybePoint = null
     @points = null
     lc.setShapesInProgress([])
     lc.repaintLayer('main')
 
   _close: (lc) ->
-    @_ensureFinishButtonsDontExist(lc)
+    lc.trigger 'lc-polygon-stopped'
     lc.setShapesInProgress([])
     lc.saveShape(@_getShape(lc, false)) if @points.length > 2
     @maybePoint = null
@@ -102,54 +119,4 @@ module.exports = class Pencil extends ToolWithStroke
     else
       null
 
-  _ensureFinishButtonsExist: (lc) ->
-    return if @containerEl
-    html = "
-      <div
-        class='square-toolbar-button horz-toolbar'
-        id='polygon-finish-closed'>
-        <img
-          alt='Finish polygon (closed)'
-          title='Finish polygon (closed)'
-          src='#{lc.opts.imageURLPrefix}/polygon-closed.png'>
-      </div>
-      <div
-        class='square-toolbar-button horz-toolbar'
-        id='polygon-finish-open'>
-        <img
-          alt='Finish polygon (open)'
-          title='Finish polygon (open)'
-          src='#{lc.opts.imageURLPrefix}/polygon-open.png'>
-      </div>
-      <div
-        class='square-toolbar-button horz-toolbar'
-        id='polygon-cancel'>
-        <img
-          alt='Cancel polygon'
-          title='Cancel polygon'
-          src='#{lc.opts.imageURLPrefix}/polygon-cancel.png'>
-      </div>
-    "
-    @containerEl = document.createElement('div')
-    @containerEl.className = "polygon-toolbar horz-toolbar"
-    @containerEl.innerHTML = html
-    lc.containerEl.appendChild(@containerEl)
-
-    document.getElementById('polygon-finish-closed')
-      .addEventListener 'click', (e) =>
-        @maybePoint = @points[0]
-        @_close(lc)
-
-    document.getElementById('polygon-finish-open')
-      .addEventListener 'click', (e) =>
-        @maybePoint = {x: Infinity, y: Infinity}
-        @_close(lc)
-
-    document.getElementById('polygon-cancel')
-      .addEventListener 'click', (e) =>
-        @_cancel(lc)
-
-  _ensureFinishButtonsDontExist: (lc) ->
-    return unless @containerEl
-    lc.containerEl.removeChild(@containerEl)
-    @containerEl = null
+  optionsStyle: 'polygon-and-stroke-width'
