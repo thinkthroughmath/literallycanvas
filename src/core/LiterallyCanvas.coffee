@@ -352,8 +352,8 @@ module.exports = class LiterallyCanvas
   clear: ->
     oldShapes = @shapes
     newShapes = []
+    @setShapesInProgress []
     @execute(new actions.ClearAction(this, oldShapes, newShapes))
-    @repaintLayer('main')
     @trigger('clear', null)
     @trigger('drawingChange', {})
 
