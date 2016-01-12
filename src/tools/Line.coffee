@@ -15,7 +15,12 @@ module.exports = class Line extends ToolWithStroke
       dash: switch
         when @isDashed then [@strokeWidth * 2, @strokeWidth * 4]
         else null
-      endCapShapes: if @hasEndArrow then [null, 'arrow'] else null
+      endCapShapes:
+        switch
+          when @hasEndArrow && @hasStartArrow then ['arrow', 'arrow']
+          when @hasEndArrow then [null, 'arrow']
+          when @hasStartArrow then ['arrow', null]
+          else null
       color: lc.getColor('primary')})
 
   continue: (x, y, lc) ->
