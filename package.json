@@ -4,9 +4,11 @@
   "description": "HTML5 drawing widget",
   "main": "lib/js",
   "scripts": {
+    "dev": "gulp dev",
     "coffee": "coffee --compile --bare --output lib/js/ src/",
     "prepublish": "npm run coffee",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp"
   },
   "repository": {
     "type": "git",
