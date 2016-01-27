@@ -232,6 +232,7 @@ module.exports = class Text extends Tool
     @inputEl.focus()
 
     @_setShapesInProgress(lc)
+    lc.trigger 'lc-text-started'
 
   _exitEditingState: (lc) ->
     @currentShapeState = 'selected'
@@ -240,6 +241,7 @@ module.exports = class Text extends Tool
 
     @_setShapesInProgress(lc)
     lc.repaintLayer('main')
+    lc.trigger 'lc-text-stopped'
 
   _updateInputEl: (lc, withMargin=false) ->
     return unless @inputEl
