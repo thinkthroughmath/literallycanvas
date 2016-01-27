@@ -174,15 +174,15 @@ module.exports = class LiterallyCanvas
 
   getColor: (name) -> @colors[name]
 
-  saveShape: (shape, triggerShapeSaveEvent=true, previousShapeId=null) ->
+  saveShape: (shape, triggerEvents=true, previousShapeId=null) ->
     unless previousShapeId
       previousShapeId = if @shapes.length \
         then @shapes[@shapes.length-1].id \
         else null
     @execute(new actions.AddShapeAction(this, shape, previousShapeId))
-    if triggerShapeSaveEvent
+    if triggerEvents
       @trigger('shapeSave', {shape, previousShapeId})
-    @trigger('drawingChange')
+      @trigger('drawingChange')
 
   pan: (x, y) ->
     # Subtract because we are moving the viewport
